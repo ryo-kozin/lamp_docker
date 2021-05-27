@@ -1,0 +1,61 @@
+version: "3.7"
+services:
+  app:
+    build:
+      args:
+        user: www
+        uid: 1000
+      context: ./
+      dockerfile: Dockerfile
+    image: laravel-image
+    container_name: laravel-app
+    restart: unless-stopped
+    working_dir: /var/www/
+    volumes:
+      - ./html:/var/www/html
+      - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    links:
+      - db
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  db:
+    image: mariadb
+    container_name: laravel-db
+    restart: unless-stopped
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: new_cms_db
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_PASSWORD: testuser
+      MYSQL_USER: testuser
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - ./mysql/my.cnf:/etc/mysql/my.cnf
+      - ./mysql/docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/
+    networks:
+      - app-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: laravel-nginx
+    restart: unless-stopped
+    ports:
+      - 8000:80
+    volumes:
+      - ./html:/var/www/html
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+    links:
+      - app
+    depends_on:
+      - app
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
