@@ -7,8 +7,8 @@ services:
         uid: 1000
       context: ./
       dockerfile: Dockerfile
-    image: laravel-image-new
-    container_name: laravel-app-new
+    image: laravel
+    container_name: laravel-app
     restart: unless-stopped
     working_dir: /var/www/html
     volumes:
@@ -25,7 +25,7 @@ services:
 
   db:
     image: mariadb
-    container_name: laravel-db-new
+    container_name: laravel-db
     restart: unless-stopped
     # This container isn't related to phpmyadmin so I think you don't need to open this port.
     # ports:
@@ -47,7 +47,7 @@ services:
 
   nginx:
     image: nginx:alpine
-    container_name: laravel-nginx-new
+    container_name: laravel-nginx
     restart: unless-stopped
     ports:
       - 8000:80
@@ -57,10 +57,10 @@ services:
       - ./nginx/conf.d/:/etc/nginx/conf.d/
 #      - ./nginx:/etc
 #    When you want add ports
-    extra_hosts:
+    # extra_hosts:
 #      - test1.com:111.111.111.111
 #      - test2.com:222.222.222.222
-      - test.com:127.0.0.2
+      # - test.com:127.0.0.2
     links:
       - app
     depends_on:
