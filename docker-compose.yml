@@ -51,9 +51,16 @@ services:
     restart: unless-stopped
     ports:
       - 8000:80
+      - 8080:80
     volumes:
       - ./html:/var/www/html
       - ./nginx/conf.d/:/etc/nginx/conf.d/
+#      - ./nginx:/etc
+#    When you want add ports
+    extra_hosts:
+#      - test1.com:111.111.111.111
+#      - test2.com:222.222.222.222
+      - test.com:127.0.0.2
     links:
       - app
     depends_on:
