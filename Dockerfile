@@ -27,7 +27,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN cd /var/www/html
 # You should create laravel project by your self after running docker-compose up. 
 # Go in this container and run the code below 
-# RUN composer create-project laravel/laravel="7.*" myProject
+RUN composer create-project laravel/laravel myProject
 
 # Create system user to run Composer and Artisan Commands
 RUN useradd -G www-data,root -u $uid -d /home/$user $user
