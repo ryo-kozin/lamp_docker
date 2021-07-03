@@ -31,7 +31,7 @@ services:
     # ports:
     #   - 3306:3306
     environment:
-      MYSQL_DATABASE: project01
+      MYSQL_DATABASE: user_system
       MYSQL_ROOT_PASSWORD: root
       # MYSQL_PASSWORD: testuser
       # MYSQL_USER: testuser
