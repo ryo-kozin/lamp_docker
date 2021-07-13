@@ -8,7 +8,7 @@ phpmyadmin -> phpmyadmin
 nginx -> nginx
 
 #how to build 
-1. git clone https://github.com/ryo-kozin/docker_laravel    
+1. git clone https://github.com/ryo-kozin/docker_laravel.git  
 2. cd docker_laravel
 3. docker-compose up -d
 4. docker exec -it laravel-app bash
