@@ -13,7 +13,6 @@ services:
     working_dir: /var/www/html
     volumes:
       - ./html:/var/www/html
-      # You need to create a php.ini file on your host
       - ./php/php.ini:/usr/local/etc/php/php.ini
     links:
       - db
@@ -27,23 +26,15 @@ services:
     image: mariadb
     container_name: laravel-db
     restart: unless-stopped
-    # This container isn't related to phpmyadmin so I think you don't need to open this port.
-    # ports:
-    #   - 3306:3306
     environment:
       MYSQL_DATABASE: user_system
       MYSQL_ROOT_PASSWORD: root
       MYSQL_PASSWORD: test
       MYSQL_USER: test
       TZ: Asia/Tokyo
-      # SERVICE_TAGS: dev
-      # SERVICE_NAME: mysql
     volumes:
       - ./mysql/my.cnf:/etc/mysql/my.cnf
       - ./mysql/data:/var/lib/mysql
-      # Registration of initial data
-      # https://qiita.com/NagaokaKenichi/items/ae037963b33a85df33f5
-      # - ./mysql/docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/
     networks:
       - app-db
       - phpmyadmin-nginx
@@ -77,16 +68,12 @@ services:
     container_name: laravel-nginx
     restart: unless-stopped
     ports:
-      # - 8000:80
       - 8080:80
     volumes:
       - ./html:/var/www/html
       - ./nginx/conf.d/:/etc/nginx/conf.d/
-#      - ./nginx:/etc
 #    When you want add ports
     # extra_hosts:
-#      - test1.com:111.111.111.111
-#      - test2.com:222.222.222.222
       # - test.com:127.0.0.2
     links:
       - app
