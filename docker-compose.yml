@@ -12,6 +12,7 @@ services:
       - ./html:/var/www/html
       - ./php/php.ini:/usr/local/etc/php/php.ini
       - ./apache/apache2.conf:/etc/apache2/apache2.conf
+      - ./apache/000-default.conf:/etc/apache2/sites-enabled/000-default.conf
     ports:
       - 80:80
     links:
