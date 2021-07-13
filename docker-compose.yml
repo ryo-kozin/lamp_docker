@@ -33,12 +33,14 @@ services:
     environment:
       MYSQL_DATABASE: user_system
       MYSQL_ROOT_PASSWORD: root
-      # MYSQL_PASSWORD: testuser
-      # MYSQL_USER: testuser
-      SERVICE_TAGS: dev
-      SERVICE_NAME: mysql
+      MYSQL_PASSWORD: test
+      MYSQL_USER: test
+      TZ: Asia/Tokyo
+      # SERVICE_TAGS: dev
+      # SERVICE_NAME: mysql
     volumes:
       - ./mysql/my.cnf:/etc/mysql/my.cnf
+      - ./mysql/data:/var/lib/mysql
       # Registration of initial data
       # https://qiita.com/NagaokaKenichi/items/ae037963b33a85df33f5
       # - ./mysql/docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/
@@ -49,13 +51,16 @@ services:
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: laravel-phpmyadmin
+    restart: unless-stopped
     environment:
       - PMA_ARBITRARY=1
-      - PMA_HOSTS=db-host
+      - PMA_HOSTS=laravel-db
       - PMA_USER=root
       - PMA_PASSWORD=root
+    volumes:
+      - ./phpmyadmin/sessions:/sessions
     ports:
-      - 8000:8000
+      - 8000:80
     links:
       - db
       - nginx
