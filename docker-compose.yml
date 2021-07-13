@@ -44,6 +44,28 @@ services:
       # - ./mysql/docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/
     networks:
       - app-db
+      - phpmyadmin-nginx
+  
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: laravel-phpmyadmin
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOSTS=db-host
+      - PMA_USER=root
+      - PMA_PASSWORD=root
+    ports:
+      - 8000:8000
+    links:
+      - db
+      - nginx
+    depends_on:
+      - db
+      - nginx
+    networks:
+      - db-phpmyadmin
+      - phpmyadmin-nginx
+
 
   nginx:
     image: nginx:alpine
@@ -67,9 +89,14 @@ services:
       - app
     networks:
       - app-nginx
+      - phpmyadmin-nginx
 
 networks:
   app-db:
     driver: bridge
   app-nginx:
+    driver: bridge
+  db-phpmyadmin:
+    driver: bridge
+  phpmyadmin-nginx:
     driver: bridge
