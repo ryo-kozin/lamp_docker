@@ -2,25 +2,25 @@ version: "3.7"
 services:
   app:
     build:
-      args:
-        user: www
-        uid: 1000
       context: ./
       dockerfile: Dockerfile
-    image: laravel
+    image: php-apache
     container_name: laravel-app
     restart: unless-stopped
     working_dir: /var/www/html
     volumes:
       - ./html:/var/www/html
       - ./php/php.ini:/usr/local/etc/php/php.ini
+      - ./apache/apache2.conf:/etc/apache2/apache2.conf
+    ports:
+      - 80:80
     links:
       - db
     depends_on:
       - db
     networks:
       - app-db
-      - app-nginx
+      - app-phpmyadmin
 
   db:
     image: mariadb
@@ -37,7 +37,7 @@ services:
       - ./mysql/data:/var/lib/mysql
     networks:
       - app-db
-      - phpmyadmin-nginx
+      - db-phpmyadmin
   
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -54,41 +54,16 @@ services:
       - 8000:80
     links:
       - db
-      - nginx
     depends_on:
       - db
-      - nginx
     networks:
+      - app-phpmyadmin
       - db-phpmyadmin
-      - phpmyadmin-nginx
-
-
-  nginx:
-    image: nginx:alpine
-    container_name: laravel-nginx
-    restart: unless-stopped
-    ports:
-      - 8080:80
-    volumes:
-      - ./html:/var/www/html
-      - ./nginx/conf.d/:/etc/nginx/conf.d/
-#    When you want add ports
-    # extra_hosts:
-      # - test.com:127.0.0.2
-    links:
-      - app
-    depends_on:
-      - app
-    networks:
-      - app-nginx
-      - phpmyadmin-nginx
 
 networks:
   app-db:
     driver: bridge
-  app-nginx:
+  app-phpmyadmin:
     driver: bridge
   db-phpmyadmin:
-    driver: bridge
-  phpmyadmin-nginx:
     driver: bridge
