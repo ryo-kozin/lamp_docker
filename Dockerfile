@@ -1,14 +1,13 @@
 FROM php:7.4.16-apache
 
-RUN apt-get update \
-    && apt-get install -y \
+RUN apt-get update && apt-get install -y \
     git \
-    zip \
-    unzip \
-    vim \
-    zlib1g-dev \
+    curl \
     libpng-dev \
-    && docker-php-ext-install pdo_mysql mysqli
+    libonig-dev \
+    libxml2-dev \
+    zip \
+    unzip
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 ENV COMPOSER_ALLOW_SUPERUSER 1
